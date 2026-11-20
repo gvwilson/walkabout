@@ -1,4 +1,5 @@
 import argparse
+import colorsys
 from PIL import Image
 import random
 
@@ -54,14 +55,20 @@ def main():
 
 def make_image(args, grid):
     n = grid.size
-    max_val = max(max(row) for row in grid.grid) or 1
-    img = Image.new("L", (n, n))
+    max_val = max(max(row) for row in grid.grid)
+    img = Image.new("RGB", (n, n))
     for i in range(n):
         for j in range(n):
-            val = grid[i, j]
-            shade = MAX_VAL - MAX_VAL * val // max_val
-            img.putpixel((j, i), shade)
+            img.putpixel((j, i), color_for(grid[i, j], max_val))
     return img.resize((args.pixels, args.pixels), Image.NEAREST)
+
+
+def color_for(val, max_val):
+    if max_val == 0:
+        return (0, 0, 0)
+    frac = val / max_val
+    r, g, b = colorsys.hsv_to_rgb(frac * 2 / 3, 1.0, frac)
+    return (int(r * MAX_VAL), int(g * MAX_VAL), int(b * MAX_VAL))
 
 
 def save(args, img):
