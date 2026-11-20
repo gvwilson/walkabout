@@ -43,7 +43,8 @@ def main():
     if args.seed is not None:
         random.seed(args.seed)
     grid = Grid(args.size)
-    grid.fill()
+    for i in range(args.walkers):
+        grid.fill()
     img = make_image(args, grid)
     if args.outfile:
         save(args, img)
@@ -77,6 +78,7 @@ def parse_args():
     parser.add_argument("--pixels", type=int, default=PIXELS, help="image size in pixels")
     parser.add_argument("--seed", type=int, help="RNG seed")
     parser.add_argument("--size", type=int, default=101, help="grid size")
+    parser.add_argument("--walkers", type=int, default=1, help="number of walkers")
     return parser.parse_args()
 
 
